@@ -13,6 +13,9 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+var token = localStorage.getItem("images-user-token");
+if (token != null && token != undefined)
+    window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

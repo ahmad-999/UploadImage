@@ -22,4 +22,8 @@ class UpdateImageController extends Controller
         }
         return response()->json(['status' => "false", 'url' => $imageModel->url], 400);
     }
+    public function images(){
+        $images = Image::all();
+        return response()->json($images,200);
+    }
 }

@@ -1,39 +1,28 @@
 <template>
-    <div>
-        <form @submit.prevent="uploadImage">
-            <input type="file" @change="changeFile" accept="image/jpeg, image/png" placeholder="Pick Image" id="file">
-            <input type="text" placeholder="Description" v-model="desc">
-            <input type="submit" value="upload image">
-        </form>
+    <div class="card-container">
+        <div v-for="(image, index) in images" :key="index" class="card">
+            <img :src="image.url">
+            <h5>{{ image.desc }}</h5>
+        </div>
     </div>
 </template>
 
 <script>
 
 export default {
+    mounted() { this.loadImages(); },
     data() {
         return {
-            file: {},
-            desc: ""
+            images: []
         }
     },
     methods: {
-        uploadImage() {
-            var formData = new FormData();
-            formData.append("image",this.file);
-            formData.append("desc",this.desc);
-            axios.post('/api/upload-image', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+        loadImages() {
+            axios.get('/api/get-images')
                 .then((result) => {
-                    console.log(result.data);
-                    alert(result.data.status);
+                    this.images = result.data;
+
                 }).catch(console.error);
-        },
-        changeFile(event) {
-            this.file = event.target.files[0];
         }
     }
 
@@ -41,5 +30,29 @@ export default {
 </script>
 
 <style scoped>
+.card {
+    width: 15rem;
+    padding: 0.22rem;
+    margin: 0.22rem;
+    object-fit: contain;
 
+}
+
+.card-container {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+@media only screen and (max-width: 600px) {
+
+    .card-container {
+
+        flex-direction: column;
+        align-items: center;
+
+    }
+}
 </style>
